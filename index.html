@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NYC Saat | Ankara Exclusive Collection</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@200;300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --gold: #c5a059;
+            --gold-hover: #e5c07b;
+            --dark-bg: #0f0f0f;
+            --card-bg: #1a1a1a;
+            --text-gray: #aaaaaa;
+            --transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--dark-bg);
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* --- ANIMASYONLAR --- */
+        .reveal { opacity: 0; transform: translateY(50px); transition: var(--transition); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        /* --- NAVİGASYON --- */
+        header {
+            position: fixed;
+            top: 0; width: 100%;
+            padding: 20px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: rgba(15, 15, 15, 0.85);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(197, 160, 89, 0.2);
+        }
+
+        .logo { font-family: 'Cinzel', serif; font-size: 1.8rem; letter-spacing: 4px; color: var(--gold); text-decoration: none; }
+
+        /* --- HERO (YOUTUBE VIDEO ARKA PLAN) --- */
+        .hero {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-video-container {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .hero-video-container iframe {
+            width: 100vw;
+            height: 56.25vw;
+            min-height: 100vh;
+            min-width: 177.77vh;
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .video-overlay {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 1;
+            background: radial-gradient(circle, rgba(15,15,15,0.1) 0%, rgba(15,15,15,0.7) 60%, rgba(15,15,15,1) 100%);
+        }
+
+        .hero-content { position: relative; z-index: 2; text-align: center; }
+        .hero h1 { font-family: 'Cinzel', serif; font-size: clamp(2rem, 7vw, 4.5rem); letter-spacing: 12px; margin-bottom: 20px; text-shadow: 2px 2px 10px rgba(0,0,0,0.8); }
+
+        /* --- SLIDER SİSTEMİ --- */
+        .container { max-width: 1400px; margin: 0 auto; padding: 100px 20px; position: relative; }
+        
+        .slider-wrapper {
+            overflow: hidden;
+            margin: 0 50px; /* Oklar için boşluk */
+        }
+
+        .watch-track {
+            display: flex;
+            gap: 30px;
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .watch-card { 
+            min-width: calc(33.133% - 20px); /* Masaüstünde 3 adet görünür */
+            background: var(--card-bg); 
+            border: 1px solid #222; 
+            position: relative; 
+            transition: var(--transition); 
+            cursor: pointer; 
+        }
+
+        .img-holder { width: 100%; height: 400px; overflow: hidden; }
+        .img-holder img { width: 100%; height: 100%; object-fit: cover; transition: 1.5s; }
+        .watch-card:hover img { transform: scale(1.1); }
+        .watch-info { padding: 30px; text-align: center; }
+        .watch-info h3 { font-family: 'Cinzel'; margin-bottom: 10px; }
+        .price { color: var(--gold); font-size: 1.2rem; }
+
+        /* Kaydırma Okları */
+        .slider-btn {
+            position: absolute;
+            top: 55%;
+            transform: translateY(-50%);
+            background: rgba(197, 160, 89, 0.8);
+            color: black;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 10;
+            font-size: 1.2rem;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .slider-btn:hover { background: var(--gold); transform: translateY(-50%) scale(1.1); }
+        .prev-btn { left: 10px; }
+        .next-btn { right: 10px; }
+
+        /* --- DİĞER BÖLÜMLER --- */
+        .faq-section { padding: 100px 10%; background: #0a0a0a; }
+        .faq-container { max-width: 800px; margin: 0 auto; }
+        .faq-item { border-bottom: 1px solid #222; padding: 20px 0; cursor: pointer; }
+        .faq-question { display: flex; justify-content: space-between; align-items: center; font-family: 'Cinzel'; color: var(--gold); }
+        .faq-answer { max-height: 0; overflow: hidden; transition: 0.4s ease-out; color: var(--text-gray); font-size: 0.9rem; padding-top: 0; }
+        .faq-item.active .faq-answer { max-height: 200px; padding-top: 15px; }
+
+        .testimonials { padding: 100px 5%; text-align: center; }
+        .testimonial-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 50px; }
+        .t-card { background: var(--card-bg); padding: 40px; border-radius: 5px; border: 1px solid #222; }
+        .stars { color: var(--gold); margin-bottom: 15px; }
+
+        .whatsapp-float {
+            position: fixed;
+            bottom: 40px; right: 40px;
+            background: #25d366;
+            color: white;
+            width: 60px; height: 60px;
+            border-radius: 50px;
+            display: flex; justify-content: center;
+            align-items: center;
+            font-size: 30px;
+            box-shadow: 2px 2px 20px rgba(0,0,0,0.5);
+            z-index: 2000;
+            transition: 0.3s;
+            text-decoration: none;
+        }
+
+        .form-container { max-width: 700px; margin: 0 auto; background: #111; padding: 50px; border-left: 4px solid var(--gold); }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; color: var(--gold); font-size: 0.8rem; margin-bottom: 8px; }
+        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 12px; background: #1a1a1a; border: 1px solid #333; color: #fff; }
+        .submit-btn { width: 100%; padding: 18px; background: var(--gold); border: none; font-weight: bold; cursor: pointer; transition: 0.3s; color: #000; letter-spacing: 2px; }
+
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 3000; display: none; align-items: center; justify-content: center; }
+        .modal-content { background: #111; max-width: 900px; width: 95%; display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--gold); position: relative; }
+        
+        #cart-sidebar { position: fixed; top: 0; right: -400px; width: 400px; height: 100vh; background: #0a0a0a; z-index: 2500; border-left: 1px solid var(--gold); padding: 40px; transition: 0.5s; }
+        #cart-sidebar.active { right: 0; }
+
+        .close-modal-btn {
+            position: absolute; top: 15px; right: 15px;
+            background: var(--gold); color: black; border: none;
+            width: 35px; height: 35px; font-size: 1.5rem;
+            font-weight: bold; cursor: pointer; z-index: 3001;
+            display: flex; align-items: center; justify-content: center; border-radius: 5px;
+        }
+
+        @media (max-width: 768px) { 
+            .watch-card { min-width: 100%; } /* Mobilde 1 adet görünür */
+            .modal-content { grid-template-columns: 1fr; max-height: 90vh; overflow-y: auto; }
+            .modal-content > div:first-child { height: 250px !important; }
+            #cart-sidebar { width: 100%; }
+            .slider-wrapper { margin: 0 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <a href="https://wa.me/905XXXXXXXXX" class="whatsapp-float" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <header>
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <div style="width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--gold); display: flex; align-items: center; justify-content: center; font-family: 'Cinzel'; color: var(--gold); font-weight: bold; background: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR5ZFZ-6RY9fIRBB_-J8Qpniax5ScmJ0WhiKQ&s') center/cover;"></div>
+            <a href="#" class="logo">NYC SAAT</a>
+        </div>
+        <button style="background: var(--gold); border:none; padding: 10px 20px; cursor:pointer; font-weight:bold;" onclick="toggleCart()">🛒 SEPETİM (<span id="cart-count">0</span>)</button>
+    </header>
+
+    <div id="cart-sidebar">
+        <button onclick="toggleCart()" style="background:none; border:none; color:var(--gold); font-size:2rem; cursor:pointer;">&times;</button>
+        <h2 style="font-family:'Cinzel'; margin: 20px 0;">SİPARİŞ ÖZETİ</h2>
+        <div id="cart-items"></div>
+        <div style="margin: 20px 0; font-size: 1.5rem; border-top: 1px solid var(--gold); padding-top: 10px;">TOPLAM: <span id="cart-total">0 TL</span></div>
+        <button class="submit-btn" onclick="toggleCart(); window.location.href='#siparis'">SİPARİŞİ TAMAMLA</button>
+    </div>
+
+    <section class="hero">
+        <div class="hero-video-container">
+            <iframe 
+                src="https://www.youtube.com/embed/wJbXzru-E94?autoplay=1&mute=1&loop=1&playlist=wJbXzru-E94&controls=0&showinfo=0&rel=0&iv_load_policy=3&disablekb=1" 
+                frameborder="0" 
+                allow="autoplay; encrypted-media" 
+                allowfullscreen>
+            </iframe>
+            <div class="video-overlay"></div>
+        </div>
+        <div class="hero-content">
+            <p class="reveal">ANKARA EXCLUSIVE</p>
+            <h1 class="reveal">MÜKEMMEL MEKANİZMA</h1>
+            <a href="#koleksiyon" class="submit-btn" style="text-decoration:none; display:inline-block; padding: 15px 40px; width:auto;">KOLEKSİYONU GÖR</a>
+        </div>
+    </section>
+
+    <div class="container" id="koleksiyon">
+        <h2 style="text-align:center; font-family:'Cinzel'; margin-bottom:50px;" class="reveal">ÖZEL SEÇKİ</h2>
+        
+        <button class="slider-btn prev-btn" onclick="slide(-1)"><i class="fas fa-chevron-left"></i></button>
+        <button class="slider-btn next-btn" onclick="slide(1)"><i class="fas fa-chevron-right"></i></button>
+
+        <div class="slider-wrapper">
+            <div class="watch-track" id="watchTrack">
+                <div class="watch-card" onclick="openModal('Tag Heuer Aquaracer', '45.000 TL', 'https://static.ticimax.cloud/cdn-cgi/image/width=-,quality=85/52411/uploads/urunresimleri/buyuk/tag-heuer-wbp1114-5-f70a.jpg', 'Otomatik', 'Safir', '42mm')">
+                    <div class="img-holder"><img src="https://static.ticimax.cloud/cdn-cgi/image/width=-,quality=85/52411/uploads/urunresimleri/buyuk/tag-heuer-wbp1114-5-f70a.jpg"></div>
+                    <div class="watch-info"><h3>Tag Heuer Aquaracer</h3><span class="price">45.000 TL</span></div>
+                </div>
+                <div class="watch-card" onclick="openModal('Tag Heuer Formula 1', '20.000 TL', 'https://static.ticimax.cloud/cdn-cgi/image/width=-,quality=85/52411/uploads/urunresimleri/buyuk/tag-heuer-wby1112-2a6-9d.jpg', 'Quartz', 'Safir', '41mm')">
+                    <div class="img-holder"><img src="https://static.ticimax.cloud/cdn-cgi/image/width=-,quality=85/52411/uploads/urunresimleri/buyuk/tag-heuer-wby1112-2a6-9d.jpg"></div>
+                    <div class="watch-info"><h3>Tag Heuer Formula 1</h3><span class="price">20.000 TL</span></div>
+                </div>
+                <div class="watch-card" onclick="openModal('Tag Heuer Gulf', '20.000 TL', 'https://static.ticimax.cloud/cdn-cgi/image/width=-,quality=85/37135/uploads/urunresimleri/buyuk/16bbce36-c1e7-4ef0-828e-79a8f0442ab2-c07-44.jpg', 'Otomatik', 'Safir', '43mm')">
+                    <div class="img-holder"><img src="https://static.ticimax.cloud/cdn-cgi/image/width=-,quality=85/37135/uploads/urunresimleri/buyuk/16bbce36-c1e7-4ef0-828e-79a8f0442ab2-c07-44.jpg"></div>
+                    <div class="watch-info"><h3>Tag Heuer Gulf</h3><span class="price">20.000 TL</span></div>
+                </div>
+                <div class="watch-card" onclick="openModal('Maurice Lacroix Aikon', '35.000 TL', 'https://cdn.beymen.com/productimages/wondocns.drn_MP_72eb7291-fe63-48ea-a5e1-fe38955ca77f_1_44777722299505922707336725215_770.jpg', 'Otomatik', 'Safir', '41mm')">
+                    <div class="img-holder"><img src="https://cdn.beymen.com/productimages/wondocns.drn_MP_72eb7291-fe63-48ea-a5e1-fe38955ca77f_1_44777722299505922707336725215_770.jpg"></div>
+                    <div class="watch-info"><h3>Maurice Lacroix Aikon</h3><span class="price">35.000 TL</span></div>
+                </div>
+                <div class="watch-card" onclick="openModal('Tag Heuer CAZ101N', '35.000 TL', 'https://konyalisaat.sm.mncdn.com/mnresize/750/-/konyalisaat/products/CAZ101N.FC8243.jpg', 'Otomatik', 'Hesalite', '42mm')">
+                    <div class="img-holder"><img src="https://konyalisaat.sm.mncdn.com/mnresize/750/-/konyalisaat/products/CAZ101N.FC8243.jpg"></div>
+                    <div class="watch-info"><h3>Tag Heuer CAZ101N</h3><span class="price">35.000 TL</span></div>
+                </div>
+                                <div class="watch-card" onclick="openModal('Tag Heuer Way101j', '20.000 TL', 'https://cdn2.jomashop.com/media/catalog/product/t/a/tag-heuer-aquaracer-henrik-lundqvist-special-edition-quartz-blue-dial-watch-way101jba0746-way101jba0746_1.jpg', 'Otomatik', 'Safir', '41mm')">
+                    <div class="img-holder"><img src="https://cdn2.jomashop.com/media/catalog/product/t/a/tag-heuer-aquaracer-henrik-lundqvist-special-edition-quartz-blue-dial-watch-way101jba0746-way101jba0746_1.jpg"></div>
+                    <div class="watch-info"><h3>Tag Heuer Way101j</h3><span class="price">20.000 TL</span></div>
+                </div>
+                <div class="watch-card" onclick="openModal('Tag Heuer Waz1012', '20.000 TL', 'https://www.tagheuer.com/on/demandware.static/-/Sites-tagheuer-master/default/dw4e560ffc/TAG_Heuer_Formula_1/WAZ1012.BA0883/WAZ1012.BA0883_0913.png', 'Otomatik', 'Safir', '41mm')">
+                    <div class="img-holder"><img src="https://www.tagheuer.com/on/demandware.static/-/Sites-tagheuer-master/default/dw4e560ffc/TAG_Heuer_Formula_1/WAZ1012.BA0883/WAZ1012.BA0883_0913.png"></div>
+                    <div class="watch-info"><h3>Tag Heuer Waz1012</h3><span class="price">20.000 TL</span></div>
+                </div>
+                <div class="watch-card" onclick="openModal('Tag Heuer Caz101h', '20.000 TL', 'https://static.ticimax.cloud/cdn-cgi/image/width=-,quality=99/52176/uploads/urunresimleri/buyuk/tag-heuer-formula-1-caz101h-7268f0.png', 'Otomatik', 'Safir', '41mm')">
+                    <div class="img-holder"><img src="https://static.ticimax.cloud/cdn-cgi/image/width=-,quality=99/52176/uploads/urunresimleri/buyuk/tag-heuer-formula-1-caz101h-7268f0.png"></div>
+                    <div class="watch-info"><h3>Tag Heuer Caz101h</h3><span class="price">20.000 TL</span></div>
+                </div>
+                                <div class="watch-card" onclick="openModal('Tag Heuer Way201h', '20.000 TL', 'https://saatolog.com.tr/wp-content/uploads/2024/07/way201h-ba0927-f.png', 'Otomatik', 'Safir', '41mm')">
+                    <div class="img-holder"><img src="https://saatolog.com.tr/wp-content/uploads/2024/07/way201h-ba0927-f.png"></div>
+                    <div class="watch-info"><h3>Tag Heuer Way201h</h3><span class="price">20.000 TL</span></div>
+                </div>
+                                <div class="watch-card" onclick="openModal('Tag Heuer Cay111b', '20.000 TL', 'https://static.ticimax.cloud/52411/uploads/urunresimleri/buyuk/tag-heuer-aquaracer-chronograph-cay111-8e435-.jpg', 'Otomatik', 'Safir', '41mm')">
+                    <div class="img-holder"><img src="https://static.ticimax.cloud/52411/uploads/urunresimleri/buyuk/tag-heuer-aquaracer-chronograph-cay111-8e435-.jpg"></div>
+                    <div class="watch-info"><h3>Tag Heuer Cay111b</h3><span class="price">20.000 TL</span></div>
+                </div>
+                                <div class="watch-card" onclick="openModal('Tag Heuer Wbd2120', '20.000 TL', 'https://platincdn.com/4166/pictures/LCPNGWDYVT652025232320_tag-heuer-aquaracer--796ec-.jpg', 'Otomatik', 'Safir', '41mm')">
+                    <div class="img-holder"><img src="https://platincdn.com/4166/pictures/LCPNGWDYVT652025232320_tag-heuer-aquaracer--796ec-.jpg"></div>
+                    <div class="watch-info"><h3>Tag Heuer Wbd2120</h3><span class="price">20.000 TL</span></div>
+                </div>
+                                <div class="watch-card" onclick="openModal('Tag Heuer Caz101u', '20.000 TL', 'https://static.ticimax.cloud/cdn-cgi/image/width=-,quality=85/52176/uploads/urunresimleri/buyuk/tag-heuer-formula-1-caz101u-6c-4dd.jpg', 'Otomatik', 'Safir', '41mm')">
+                    <div class="img-holder"><img src="https://static.ticimax.cloud/cdn-cgi/image/width=-,quality=85/52176/uploads/urunresimleri/buyuk/tag-heuer-formula-1-caz101u-6c-4dd.jpg"></div>
+                    <div class="watch-info"><h3>Tag Heuer Caz101u</h3><span class="price">20.000 TL</span></div>
+                </div>       
+                                <div class="watch-card" onclick="openModal('Tag Heuer Caz101AB', '20.000 TL', 'https://static.ticimax.cloud/52176/uploads/urunresimleri/buyuk/tag-heuer-formula-1-caz101ab-43e5-b.jpg', 'Otomatik', 'Safir', '41mm')">
+                    <div class="img-holder"><img src="https://static.ticimax.cloud/52176/uploads/urunresimleri/buyuk/tag-heuer-formula-1-caz101ab-43e5-b.jpg"></div>
+                    <div class="watch-info"><h3>Tag Heuer Caz101AB</h3><span class="price">20.000 TL</span></div>
+                </div>
+                                <div class="watch-card" onclick="openModal('Tag Heuer Caz101AU', '20.000 TL', 'https://static.ticimax.cloud/cdn-cgi/image/width=-,quality=85/52176/uploads/urunresimleri/buyuk/tag-heuer-formula-1-chronograph-x-indy-2-4375.png', 'Otomatik', 'Safir', '41mm')">
+                    <div class="img-holder"><img src="https://static.ticimax.cloud/cdn-cgi/image/width=-,quality=85/52176/uploads/urunresimleri/buyuk/tag-heuer-formula-1-chronograph-x-indy-2-4375.png"></div>
+                    <div class="watch-info"><h3>Tag Heuer Caz101AU</h3><span class="price">20.000 TL</span></div>
+                </div>
+                                <div class="watch-card" onclick="openModal('Tag Heuer Caz101AL', '20.000 TL', 'https://samiwatches.com/wp-content/uploads/2024/05/CAZ101AL.FT8052-scaled.webp', 'Otomatik', 'Safir', '41mm')">
+                    <div class="img-holder"><img src="https://samiwatches.com/wp-content/uploads/2024/05/CAZ101AL.FT8052-scaled.webp"></div>
+                    <div class="watch-info"><h3>Tag Heuer Caz101AL</h3><span class="price">20.000 TL</span></div>
+                </div>
+                                <div class="watch-card" onclick="openModal('Tag Heuer Caz101AN', '20.000 TL', 'https://static.ticimax.cloud/52411/uploads/urunresimleri/buyuk/tag-heuer-caz101an.ba0842-70a7-4.jpg', 'Otomatik', 'Safir', '41mm')">
+                    <div class="img-holder"><img src="https://static.ticimax.cloud/52411/uploads/urunresimleri/buyuk/tag-heuer-caz101an.ba0842-70a7-4.jpg"></div>
+                    <div class="watch-info"><h3>Tag Heuer Caz101AN</h3><span class="price">20.000 TL</span></div>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="testimonials reveal">
+        <h2 style="font-family:'Cinzel';">MÜŞTERİ DENEYİMLERİ</h2>
+        <div class="testimonial-grid">
+            <div class="t-card">
+                <div class="stars">★★★★★</div>
+                <p>"Ankara içi elden teslim aldım. Ürün kalitesi gerçekten muazzam."</p>
+                <h4 style="margin-top:15px; color:var(--gold);">- Aras B.</h4>
+            </div>
+            <div class="t-card">
+                <div class="stars">★★★★★</div>
+                <p>"Kargo çok hızlıydı, paketleme premium seviyede. Teşekkürler NYC."</p>
+                <h4 style="margin-top:15px; color:var(--gold);">- Caner S.</h4>
+            </div>
+        </div>
+    </section>
+
+    <section class="faq-section reveal">
+        <h2 style="font-family:'Cinzel'; text-align:center; margin-bottom:40px;">SIKÇA SORULAN SORULAR</h2>
+        <div class="faq-container">
+            <div class="faq-item" onclick="this.classList.toggle('active')">
+                <div class="faq-question">Ürünler Orijinal mi? <i class="fas fa-plus"></i></div>
+                <div class="faq-answer">Tüm ürünlerimiz %100 orijinal olup, uluslararası garanti belgesi ve sertifikasıyla birlikte teslim edilmektedir.</div>
+            </div>
+            <div class="faq-item" onclick="this.classList.toggle('active')">
+                <div class="faq-question">Ankara İçi Elden Teslimat Var mı? <i class="fas fa-plus"></i></div>
+                <div class="faq-answer">Evet, Ankara içerisindeki müşterilerimiz için aynı gün randevulu elden teslimat seçeneğimiz mevcuttur.</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="checkout reveal" id="siparis">
+        <div class="form-container">
+            <h2 style="font-family:'Cinzel'; text-align:center; margin-bottom:30px;">SİPARİŞ FORMU</h2>
+            <form id="nyc-order-form">
+                <div class="form-group"><label>AD SOYAD</label><input type="text" name="Ad_Soyad" required></div>
+                <div class="form-group"><label>TELEFON</label><input type="tel" name="Telefon" required></div>
+                <div class="form-group">
+                    <label>MODEL SEÇİMİ</label>
+                    <select name="Model" id="form-watch-select">
+                        <option>Tag Heuer Aquaracer</option>
+                        <option>Tag Heuer Formula 1</option>
+                        <option>Tag Heuer Gulf</option>
+                        <option>Oris Aquis Red</option>
+                        <option>Maurice Lacroix Aikon</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>TESLİMAT ADRESİ</label><textarea name="Adres" rows="3" required></textarea></div>
+                <button type="submit" class="submit-btn">SİPARİŞİ ONAYLA</button>
+            </form>
+        </div>
+    </section>
+
+    <div id="quick-modal" class="modal">
+        <div class="modal-content">
+            <button onclick="closeModal()" class="close-modal-btn">&times;</button>
+            <div style="height:500px;"><img id="m-img" src="" style="width:100%; height:100%; object-fit:cover;"></div>
+            <div style="padding:40px;">
+                <h2 id="m-title" style="font-family:'Cinzel'; color:var(--gold);"></h2>
+                <div id="m-price" style="font-size:1.5rem; margin:15px 0;"></div>
+                <ul style="list-style:none; font-size:0.9rem; color:var(--text-gray);">
+                    <li style="border-bottom:1px solid #222; padding:10px 0;">Mekanizma: <span id="s-mech"></span></li>
+                    <li style="border-bottom:1px solid #222; padding:10px 0;">Cam: <span id="s-glass"></span></li>
+                    <li style="border-bottom:1px solid #222; padding:10px 0;">Kasa: <span id="s-case"></span></li>
+                </ul>
+                <button class="submit-btn" style="margin-top:30px;" id="add-to-cart-btn">SEPETE EKLE</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let cart = [];
+        let currentSlide = 0;
+
+        // Slider Fonksiyonu
+        function slide(direction) {
+            const track = document.getElementById('watchTrack');
+            const cards = document.querySelectorAll('.watch-card');
+            const cardWidth = cards[0].offsetWidth + 30; // Kart genişliği + gap
+            const maxSlides = cards.length - (window.innerWidth > 768 ? 3 : 1);
+            
+            currentSlide += direction;
+            
+            if (currentSlide < 0) currentSlide = 0;
+            if (currentSlide > maxSlides) currentSlide = maxSlides;
+            
+            track.style.transform = `translateX(-${currentSlide * cardWidth}px)`;
+        }
+
+        function reveal() {
+            document.querySelectorAll('.reveal').forEach(el => {
+                if (el.getBoundingClientRect().top < window.innerHeight - 100) el.classList.add('active');
+            });
+        }
+        window.addEventListener('scroll', reveal);
+        reveal();
+
+        function toggleCart() { document.getElementById('cart-sidebar').classList.toggle('active'); }
+
+        function openModal(name, price, img, mech, glass, caseSize) {
+            document.getElementById('m-title').innerText = name;
+            document.getElementById('m-price').innerText = price;
+            document.getElementById('m-img').src = img;
+            document.getElementById('s-mech').innerText = mech;
+            document.getElementById('s-glass').innerText = glass;
+            document.getElementById('s-case').innerText = caseSize;
+            document.getElementById('add-to-cart-btn').onclick = () => { addToCart(name, price); closeModal(); };
+            document.getElementById('quick-modal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() { 
+            document.getElementById('quick-modal').style.display = 'none'; 
+            document.body.style.overflow = 'auto';
+        }
+
+        function addToCart(name, price) {
+            cart.push({name, price});
+            updateUI();
+            toggleCart();
+        }
+
+        function updateUI() {
+            const list = document.getElementById('cart-items');
+            document.getElementById('cart-count').innerText = cart.length;
+            list.innerHTML = '';
+            let total = 0;
+            cart.forEach((item, i) => {
+                total += parseInt(item.price.replace(/[^\d]/g, ''));
+                list.innerHTML += `<div style="display:flex; justify-content:space-between; margin-bottom:15px; border-bottom:1px solid #222; padding-bottom:5px;">
+                    <div><b>${item.name}</b><br><small>${item.price}</small></div>
+                    <button onclick="cart.splice(${i},1); updateUI();" style="background:none; border:none; color:red; cursor:pointer;">Sil</button>
+                </div>`;
+            });
+            document.getElementById('cart-total').innerText = total.toLocaleString('tr-TR') + ' TL';
+        }
+
+        document.getElementById('nyc-order-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = this.querySelector('.submit-btn');
+            btn.innerText = "GÖNDERİLİYOR...";
+            btn.disabled = true;
+
+            fetch("https://formspree.io/f/xdadwlvz", {
+                method: "POST",
+                body: new FormData(this),
+                headers: { 'Accept': 'application/json' }
+            }).then(() => {
+                btn.innerText = "SİPARİŞ ALINDI! TEŞEKKÜR EDERİZ.";
+                btn.style.background = "#27ae60";
+                this.reset();
+                cart = [];
+                updateUI();
+                setTimeout(() => { 
+                    btn.innerText = "SİPARİŞİ ONAYLA"; 
+                    btn.style.background = "var(--gold)"; 
+                    btn.disabled = false;
+                }, 4000);
+            }).catch(() => {
+                btn.innerText = "HATA OLUŞTU!";
+                btn.disabled = false;
+            });
+        });
+    </script>
+</body>
+</html>
